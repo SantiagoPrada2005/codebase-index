@@ -65,6 +65,58 @@ Instead of opening 10 files, the agent reads a **30–50 line index** describing
 
 ---
 
+## 🎯 When Should You Use & Install This Skill?
+
+### Decision Matrix: Install vs. Skip
+
+| Your Project Profile | Recommendation | Why? |
+| :--- | :--- | :--- |
+| **Mid-to-Large Codebases (>15 files, multiple folders)** | **Must Install** | Prevents the agent from wandering across directories and burning token budgets. |
+| **Monorepos & Microservices** | **Must Install** | Provides instant layer separation between packages, apps, and shared libs. |
+| **Team Projects with Heavy Agent Usage** | **Must Install** | Enforces an architectural standard and keeps documentation 100% synchronized via CI. |
+| **Fast Prototyping / Daily Coding Sessions** | **Recommended** | Drastically speeds up time-to-first-edit and prevents hitting LLM rate limits. |
+| **Single-File Scripts or Micro-Libs (<5 files)** | **Skip** | Overkill. Flat projects with very few files do not require hierarchical indexing. |
+
+---
+
+## 💡 Real-World Use Cases & Scenarios
+
+### 1. 🏗️ The Multi-Layer / Monorepo Project
+In projects with `apps/`, `packages/`, `actions/`, `db/`, and `components/`, an AI agent asked to *"add a billing webhook"* will often grep for `stripe`, open 6 database files, 4 UI files, and 2 utils.
+* **With `codebase-index`**: The agent reads root `/INDEX.md`, traverses straight to `src/actions/INDEX.md`, spots the existing webhook contracts in 150 tokens, and writes the code without reading irrelevant files.
+
+### 2. 💸 Rate Limits & Token Budget Conservation
+If you use Anthropic Claude (Claude Code / Sonnet 3.7), OpenAI (o1/o3/GPT-4o), or Gemini Pro, running complex coding loops can easily consume 200,000+ tokens in an hour.
+* **With `codebase-index`**: Each discovery phase consumes **~150 tokens** instead of **~12,000 tokens**, extending your token allowance by **up to 10x**.
+
+### 3. 🛡️ Legacy Codebase Onboarding
+When you drop an agent into an unfamiliar or undocumented repo, its first reaction is confusion and blind guessing.
+* **With `codebase-index`**: Running `python3 scripts/index_manager.py scaffold .` instantly generates a machine-readable semantic index map that grounds any AI agent (and new human engineers) in seconds.
+
+### 4. 🔒 Architectural Invariant Enforcement
+Prevent agents from breaking architectural boundaries (e.g. importing backend code in frontend islands).
+* Directory rules defined in `INDEX.md` act as **hard system constraints** that the agent respects before writing code.
+
+---
+
+## 🤖 When Does the AI Agent Trigger This Skill?
+
+Coding agents automatically trigger `codebase-index` when handling:
+- **Exploration & Discovery**: *“Where is the auth logic located?”, “Find where we define vehicle schemas”, “How are payments processed?”*
+- **Creating New Features**: *“Create a new report generation action”, “Add a pricing page”* (triggers automatic registration in `INDEX.md`).
+- **Refactoring & Deletions**: *“Delete the legacy v1 API endpoints”* (triggers index reconciliation to remove orphan entries).
+- **Architecture & Health Audits**: *“Audit repository consistency”, “Verify project documentation”*.
+
+---
+
+## 🚫 When NOT to Use This Skill
+
+- **Single-File Micro-Projects**: If your project has fewer than 5 files in a single flat directory, indexing adds unnecessary overhead.
+- **Throwaway Scratch Scripts**: One-off scripts in `/tmp` or local sandbox experiments.
+- **Direct Line Fixes**: Fixing a typo or a 1-line bug in an already opened file does not require index consultation.
+
+---
+
 ## 📁 Repository Structure
 
 ```

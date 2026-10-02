@@ -1,15 +1,38 @@
 ---
 name: codebase-index
-description: Enforces structured directory indexing via INDEX.md, hierarchical navigation, and deterministic index maintenance across the codebase. ALWAYS activate and follow this skill when exploring the project, searching for existing features or symbols, planning architectural changes, adding, modifying, moving, or deleting files, or auditing project organization. Guarantees token-efficient navigation and zero-drift documentation.
+description: Enforces structured directory indexing via INDEX.md, hierarchical navigation, and deterministic index maintenance across the codebase. Use when exploring codebases, locating functions or symbols without reading raw files, planning changes, adding, modifying, moving, or deleting files, auditing repository organization, or preventing token exhaustion during long agent sessions. Triggers on 'explore codebase', 'where is', 'find function', 'locate file', 'codebase map', 'save tokens', 'audit index', 'add file', 'remove file', 'codebase structure'.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   author: "Santiago Prada"
 ---
 
 # Codebase Index & Hierarchical Navigation Guide
 
-This skill establishes an **Index-First Architecture** for navigating, documenting, and maintaining codebases. By decoupling discovery from raw file reading, AI agents locate functionality in seconds while consuming up to **85% fewer tokens** and eliminating hallucinated imports.
+This skill establishes an **Index-First Architecture** for navigating, documenting, and maintaining codebases. By decoupling discovery from raw file reading, AI agents locate functionality in seconds while consuming up to **85%–90% fewer tokens** and eliminating hallucinated imports.
+
+---
+
+## 🎯 When to Use This Skill
+
+Activate and follow this skill whenever you encounter any of the following scenarios:
+
+| Scenario / Intent | What the Agent Must Do |
+| :--- | :--- |
+| **Exploration & Discovery** *(“Where is the auth logic?”, “How are bookings handled?”)* | Consult the nearest `INDEX.md` to pinpoint target files before opening raw code. Never run full-repo greps blindly. |
+| **Adding New Files or Modules** *(“Create a payment service”, “Add a new route”)* | Scaffold or add the new file to the folder's `INDEX.md` manifest with its role, public exports, and dependencies. |
+| **Deleting or Moving Files** *(“Remove legacy auth”, “Move utils to lib”)* | Immediately update or remove the file's entry in the corresponding `INDEX.md` to prevent ghost references. |
+| **Modifying Public Contracts / APIs** *(“Add a parameter to login()”, “Export new helper”)* | Reconcile the `Public Exports / API` column in `INDEX.md` in the exact same task. |
+| **Pre-Flight / Task Completion** *(“I'm done with the refactor”)* | Run `python3 scripts/index_manager.py audit` before concluding to verify zero drift. |
+| **Preventing Token Exhaustion** *(Long agent sessions, rate-limit constraints)* | Use indices as high-density semantic caches instead of dumping thousands of source lines into context. |
+
+---
+
+## 🚫 When NOT to Use This Skill
+
+- **Direct In-File Edits**: When the exact file and lines to modify are already identified and open in context.
+- **Throwaway Scratch Scripts**: One-off scripts in temporary directories (`/tmp`, scratchpads) that are not part of the committed architecture.
+- **Single-File Micro-Projects**: Trivial repositories with fewer than 5 total files where folder hierarchy does not exist.
 
 ---
 
