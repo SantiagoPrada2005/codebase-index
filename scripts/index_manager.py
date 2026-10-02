@@ -161,9 +161,7 @@ def extract_metadata(index_path: Path) -> Dict[str, str]:
     if resp_match:
         res["responsibility"] = resp_match.group(1).strip()
         
-    layer_match = re.search(r"\*\*Capa(?: Arquitectónica)?\*\*:\s*([^\n]+)", content, re.IGNORECASE)
-    if not layer_match:
-        layer_match = re.search(r"\*\*Layer\*\*:\s*([^\n]+)", content, re.IGNORECASE)
+    layer_match = re.search(r"\*\*(?:Capa(?: Arquitectónica)?|(?:Architectural )?Layer)\*\*:\s*([^\n]+)", content, re.IGNORECASE)
     if layer_match:
         res["layer"] = layer_match.group(1).strip()
         
